@@ -31,6 +31,7 @@ CXXLINK := nvlink
 # Use this if you want to use Tomek 2019 cell model.
 # Otherwise, comment it
 #CXXFLAGS += -DTOMEK_2019
+CXXFLAGS += -std=c++14
 
 # LDFLAGS is used for linker (-g enables debug symbols)
 # LDFLAGS  += -g -L/usr/local/cuda/lib64
@@ -60,7 +61,7 @@ all : $(PROGNAME)
 
 # Declare that the final program depends on all objects and the Makfile
 $(PROGNAME) : $(OBJECTS) Makefile
-	$(CXX) -o bin/$@ $(OBJECTS) $(LDFLAGS)
+	$(CXX) -o bin/$@ $(CXXFLAGS) $(OBJECTS) $(LDFLAGS)
 
 # Now the choice of using implicit rules or not (my choice)...
 #

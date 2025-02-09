@@ -5,7 +5,7 @@
 #include <cstring>
 #include <filesystem>
 #include <iostream>
-#include <regex>
+// #include <regex>
 #include <sys/stat.h>
 
 /**
@@ -133,17 +133,29 @@ int get_init_data_from_file(const char *file_name, double *init_states) {
  * @param filename Name of the file.
  * @return char* Extracted drug name.
  */
-char *get_drug_name(const char filename[1024]) {
-    std::string path(filename);
-    std::smatch match;
-    if (std::regex_search(path, match, std::regex(R"((IC50_)?([a-zA-Z0-9_]+)\.csv$)"))) {
-        std::string extracted_name = match[2].str();
-        char *result = new char[extracted_name.size() + 1];
-        std::strcpy(result, extracted_name.c_str());
-        return result;
-    } else {
+ char *get_drug_name(const char filename[1024]) {
+    const char *last_slash = strrchr(filename, '/');
+    const char *base_name = last_slash ? last_slash + 1 : filename;
+    
+    // Find start of actual name (skip "IC50_" if present)
+    const char *name_start = strstr(base_name, "IC50_");
+    name_start = name_start ? name_start + 5 : base_name;
+    
+    // Find the extension
+    const char *extension = strrchr(name_start, '.');
+    if (!extension) {
         return nullptr;
     }
+    
+    // Calculate length excluding extension
+    size_t name_length = extension - name_start;
+    
+    // Allocate and copy the drug name
+    char *result = new char[name_length + 1];
+    strncpy(result, name_start, name_length);
+    result[name_length] = '\0';
+    
+    return result;
 }
 
 /**
