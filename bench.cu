@@ -55,6 +55,11 @@ int main(int argc, char **argv) {
                      d_mec_RATES, d_mec_STATES, d_p_param, temp_result, cipa_result, d_STATES_RESULT, d_ic50, ic50,
                      d_conc, conc, p_param);
 
+    cudaError_t err = cudaGetLastError();
+    err = cudaGetLastError();
+    printf("CUDA comments: %s\n", cudaGetErrorString(err));
+
+
     tic();
 
     if (p_param->is_time_series == 1 ) {
@@ -95,6 +100,8 @@ int main(int argc, char **argv) {
 
         cudaDeviceSynchronize();
         // checked till here
+        err = cudaGetLastError();
+        printf("CUDA comments: %s\n", cudaGetErrorString(err));
 
         printf("allocating memory for computation result in the CPU, malloc style \n");
         double *h_states, *h_time, *h_dt, *h_ical, *h_inal, *h_cai_result, *h_ina, *h_ito, *h_ikr, *h_iks, *h_ik1, *h_tension;
@@ -322,6 +329,8 @@ int main(int argc, char **argv) {
         d_mec_CONSTANTS, d_mec_STATES, d_mec_RATES, d_mec_ALGEBRAIC, time, states, dt, cai_result, ina, inal, ical, ito,
         ikr, iks, ik1, sample_size, temp_result, cipa_result, d_p_param);
     cudaDeviceSynchronize();
+    err = cudaGetLastError();
+    printf("CUDA comments: %s\n", cudaGetErrorString(err));
 
     double *h_states = (double *)malloc(ORd_num_of_states * sample_size * sizeof(double));
     cipa_t *h_cipa_result = (cipa_t *)malloc(sample_size * sizeof(cipa_t));
